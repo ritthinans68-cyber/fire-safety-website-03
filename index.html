@@ -1,0 +1,1102 @@
+<!DOCTYPE html><html lang="th"><head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>ระบบการเรียนรู้การป้องกันและระงับอัคคีภัย (Fire Safety E-Learning)</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Prompt', 'sans-serif'] },
+          colors: { fire: { 500: '#ef4444', 600: '#dc2626' } }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Prompt', sans-serif; transition: background-color 0.25s, color 0.25s; }
+    .btn-keycap {
+      box-shadow: 0 10px 0 #b45309, 0 15px 25px rgba(234, 88, 12, 0.4);
+      transition: all 0.15s ease-out;
+    }
+    .btn-keycap:hover { transform: translateY(-2px); box-shadow: 0 12px 0 #b45309, 0 20px 30px rgba(234, 88, 12, 0.45); }
+    .btn-keycap:active { transform: translateY(6px); box-shadow: 0 4px 0 #b45309, 0 8px 15px rgba(234, 88, 12, 0.3); }
+    .score-stamp {
+      border: 4px dashed #dc2626;
+      border-radius: 9999px;
+      animation: stampPulse 2s infinite ease-in-out;
+    }
+    @keyframes stampPulse {
+      0%, 100% { transform: scale(1) rotate(-6deg); }
+      50% { transform: scale(1.03) rotate(-6deg); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+
+<!-- NAVBAR -->
+<header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('p1-start')">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center text-white shadow-md">
+        <i class="fa-solid fa-fire text-xl"></i>
+      </div>
+      <div>
+        <span class="font-bold text-lg bg-gradient-to-r from-red-600 to-amber-600 bg-clip-text text-transparent">FIRE SAFETY ED</span>
+        <p class="text-[11px] text-slate-400 hidden sm:block">หลักสูตรมาตรฐานอัคคีภัย 4 หน่วยการเรียนรู้</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-2">
+      <button class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800" onclick="toggleDarkMode()" title="สลับธีม"><i class="fa-solid fa-moon text-sm"></i></button>
+      <div class="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-700">
+        <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/50 text-red-600 font-bold flex items-center justify-center text-xs" id="navAvatar">ผ</div>
+        <span class="text-xs font-semibold hidden sm:inline-block" id="navUsername">ผู้เรียนทั่วไป</span>
+      </div>
+      <button class="ml-2 px-3 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow flex items-center gap-1.5" onclick="toggleDrawer()">
+        <i class="fa-solid fa-bars"></i> <span class="">เมนูหลัก</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- DRAWER -->
+<div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden" id="drawerBackdrop" onclick="toggleDrawer()"></div>
+<aside class="fixed top-0 right-0 z-50 h-full w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl p-5 transform transition-transform duration-300 flex flex-col justify-between translate-x-full" id="drawer">
+  <div>
+    <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+      <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="fa-solid fa-fire text-red-600"></i> ศูนย์รวมเมนู</h3>
+      <button onclick="toggleDrawer()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-red-50 dark:bg-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center" id="drawerAvatar">ผ</div>
+        <div class="text-xs">
+          <p class="font-bold truncate max-w-[120px]" id="drawerUser">ผู้เรียนทั่วไป</p>
+          <span class="text-slate-400">สถานะ: ผู้เรียน</span>
+        </div>
+      </div>
+      <button onclick="navigateTo('p1-login'); toggleDrawer();" class="text-[11px] font-bold text-red-600 hover:underline">สลับผู้ใช้</button>
+    </div>
+    <nav class="mt-4 space-y-1 text-xs">
+      <button onclick="navigateTo('p1-start'); toggleDrawer();" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5"><i class="fa-solid fa-house text-slate-400"></i> หน้าแรก (Start)</button>
+      <button onclick="navigateTo('p2-modules'); toggleDrawer();" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5 font-bold text-red-600 dark:text-red-400"><i class="fa-solid fa-book-open"></i> บทเรียน 4 หน่วยการเรียนรู้</button>
+      
+      <button onclick="openQuizBank(); toggleDrawer();" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5"><i class="fa-solid fa-clipboard-list text-slate-400"></i> ตรวจคลังข้อสอบ Pre/Post ตรงกัน</button>
+      <button onclick="openFeedback(); toggleDrawer();" class="w-full text-left p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5 text-amber-500 font-semibold"><i class="fa-solid fa-star"></i> ประเมินความพึงพอใจ 5 ดาว</button>
+      <button onclick="navigateTo('p-emergency'); toggleDrawer();" class="w-full text-left p-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/40 text-red-600 flex items-center gap-2.5"><i class="fa-solid fa-phone-volume"></i> สายด่วนฉุกเฉิน (199/191/1669)</button>
+    </nav>
+  </div>
+  <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+    <button onclick="navigateTo('p1-login'); toggleDrawer();" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold hover:bg-slate-200 flex items-center justify-center gap-2">
+      <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ / ล็อกอิน
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6">
+
+  <!-- 1. START SCREEN -->
+  <section id="p1-start" class="page-view flex flex-col items-center justify-center min-h-[70vh] text-center">
+    <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-red-600 via-orange-500 to-amber-400 flex items-center justify-center text-white shadow-2xl shadow-orange-500/30 mb-6">
+      <i class="fa-solid fa-fire text-5xl"></i>
+    </div>
+    <span class="px-3 py-1 rounded-full bg-red-100 dark:bg-red-950/50 text-red-600 text-xs font-bold border border-red-200 dark:border-red-900 mb-3">สื่อการเรียนรู้การป้องกันและระงับอัคคีภัย</span>
+    <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
+      สื่อการเรียนรู้ <br>
+      <span class="bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 bg-clip-text text-transparent">การป้องกันและระงับอัคคีภัย</span>
+    </h1>
+    <p class="mt-3 text-sm text-slate-500 dark:text-slate-400 max-w-lg">Interactive Fire Safety &amp; Disaster Preparedness E-Learning System (ครบ 4 หน่วยการเรียนรู้ พร้อมแบบทดสอบ Pre/Post และมินิเกม)</p>
+    <div class="mt-8">
+      <button onclick="navigateTo('p1-login')" class="btn-keycap px-10 py-5 rounded-2xl bg-gradient-to-b from-amber-400 via-orange-500 to-red-500 text-white font-black text-2xl uppercase tracking-wider flex items-center gap-3">
+        <span class="">START</span> <i class="fa-solid fa-circle-arrow-right"></i>
+      </button>
+    </div>
+    <p class="mt-4 text-xs text-slate-400">กดปุ่ม START เพื่อเข้าสู่ระบบและเริ่มศึกษาเนื้อหาแบบทดสอบ</p>
+  </section>
+
+  <!-- 2. LOGIN / REGISTER SCREEN (3 FIELDS ONLY: NICKNAME, USERNAME, PASSWORD) -->
+  <section id="p1-login" class="page-view hidden max-w-md mx-auto py-8">
+    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-xl">
+      <div class="flex rounded-xl bg-slate-100 dark:bg-slate-700/60 p-1 mb-6 text-xs font-bold">
+        <button id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 shadow text-slate-900 dark:text-white">เข้าสู่ระบบ (Login)</button>
+        <button id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-white">ลงทะเบียนผู้เรียนใหม่</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="formLogin" onsubmit="handleAuth(event, 'login')" class="space-y-4">
+        <div class="text-center mb-4">
+          <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-950 text-red-600 mx-auto flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
+          <h2 class="text-xl font-bold">ล็อกอินเข้าสู่ระบบ</h2>
+          <p class="text-xs text-slate-400">เข้าสู่บทเรียน 4 หน่วยการเรียนรู้</p>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่อผู้ใช้ (USERNAME)</label>
+          <input id="loginUser" type="text" required="" placeholder="กรอก Username ของคุณ" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs focus:ring-2 focus:ring-red-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">รหัสผ่าน (PASSWORD)</label>
+          <input id="loginPass" type="password" required="" placeholder="••••••••" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs focus:ring-2 focus:ring-red-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-white font-bold text-xs shadow hover:brightness-105">เข้าสู่บทเรียนทันที ➔</button>
+      </form>
+
+      <!-- Register Form (Nickname, Username, Password only) -->
+      <form id="formRegister" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
+        <div class="text-center mb-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 mx-auto flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-user-plus"></i></div>
+          <h2 class="text-xl font-bold">ลงทะเบียนผู้เรียนใหม่</h2>
+          <p class="text-xs text-slate-400">กรอกข้อมูล 3 ช่องสั้นๆ เพื่อเริ่มเรียนได้ทันที</p>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">1. ชื่อเล่น / ชื่อเรียก (NICKNAME)</label>
+          <input id="regNick" type="text" required="" placeholder="เช่น น้องกานต์, ช่างเอก" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs focus:ring-2 focus:ring-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">2. ชื่อผู้ใช้ (USERNAME)</label>
+          <input id="regUser" type="text" required="" placeholder="ตั้งชื่อบัญชีผู้ใช้ เช่น safety01" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs focus:ring-2 focus:ring-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">3. รหัสผ่าน (PASSWORD)</label>
+          <input id="regPass" type="password" required="" placeholder="ตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-xs focus:ring-2 focus:ring-amber-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-red-600 text-white font-bold text-xs shadow hover:brightness-105">ยืนยันการลงทะเบียน ✓</button>
+      </form>
+
+      <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 text-center">
+        <button onclick="loginGuest()" class="text-xs text-slate-500 hover:text-red-500 underline">ทดลองใช้งานในฐานะผู้เรียนทั่วไป (Guest Mode)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. MODULE HUB (4 UNITS) -->
+  <section id="p2-modules" class="page-view hidden space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-red-600 text-xs font-bold mb-1"><i class="fa-solid fa-graduation-cap"></i> หลักสูตรดับเพลิงมาตรฐานสากล</div>
+        <h2 class="text-2xl sm:text-3xl font-black">เลือกหมวดหมู่บทเรียน (4 หน่วยการเรียนรู้)</h2>
+        <p class="text-xs sm:text-sm text-slate-400">โฟลว์การเรียนรู้: Pre-Test (ก่อนเรียน) &gt; เนื้อหา &gt; Post-Test (ข้อสอบชุดเดิมตรงกัน 100%)</p>
+      </div>
+      
+    </div>
+
+    <!-- 4 Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="modulesGrid"><div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:shadow-lg hover:border-red-400 transition flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300">หน่วยที่ 1</span>
+            <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 05:30 นาที</span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug">ความรู้พื้นฐานเกี่ยวกับอัคคีภัยและธรรมชาติของไฟ</h3>
+          <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg">
+            <i class="fa-solid fa-list-check"></i> Pre-Test &gt; สื่อการสอน &gt; Post-Test (ข้อสอบตรงกัน 100%)
+          </p>
+          <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+            <li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">1. ความหมายของอัคคีภัย</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">2. องค์ประกอบของไฟ (Triangle of Fire)</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">3. การจำแนกประเภทของไฟ (Classification of Fire)</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">4. ระยะเวลาการเกิดไฟไหม้และการลุกลาม</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">5. การสังเกตและวิเคราะห์ลักษณะของควันไฟ</span></li>
+          </ul>
+        </div>
+        <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400">แบบทดสอบ 4 ข้อ</span>
+          <button onclick="startUnit(1)" class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 text-xs font-bold shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i> เข้าสู่ Step 1 (Pre-Test)
+          </button>
+        </div>
+      </div><div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:shadow-lg hover:border-red-400 transition flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300">หน่วยที่ 2</span>
+            <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 06:15 นาที</span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug">ถังดับเพลิงและการใช้งานอย่างปลอดภัย</h3>
+          <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg">
+            <i class="fa-solid fa-list-check"></i> Pre-Test &gt; สื่อการสอน &gt; Post-Test (ข้อสอบตรงกัน 100%)
+          </p>
+          <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+            <li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">1. ประเภทของเครื่องดับเพลิง 6 ชนิดหลัก</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">2. ข้อกำหนดการติดตั้งเครื่องดับเพลิงที่ถูกต้อง</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">3. ขั้นตอนและวิธีใช้เครื่องดับเพลิง (ดึง-ปลด-กด-ส่าย / PASS)</span></li>
+          </ul>
+        </div>
+        <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400">แบบทดสอบ 4 ข้อ</span>
+          <button onclick="startUnit(2)" class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 text-xs font-bold shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i> เข้าสู่ Step 1 (Pre-Test)
+          </button>
+        </div>
+      </div><div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:shadow-lg hover:border-red-400 transition flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300">หน่วยที่ 3</span>
+            <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 06:00 นาที</span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug">การป้องกันภัยและการเตรียมพร้อมรับมือเมื่อเกิดเหตุ</h3>
+          <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg">
+            <i class="fa-solid fa-list-check"></i> Pre-Test &gt; สื่อการสอน &gt; Post-Test (ข้อสอบตรงกัน 100%)
+          </p>
+          <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+            <li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">1. หลักการป้องกันและการสังเกตสาเหตุของอัคคีภัย</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">2. การเตรียมความพร้อมและระบบป้องกันภัยในอาคารสูง</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">3. ลำดับขั้นตอนการปฏิบัติเมื่อพบเหตุไฟไหม้ 4 ขั้นตอน</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">4. ลักษณะของจุดรวมพล (Assembly Area) ที่เหมาะสม</span></li>
+          </ul>
+        </div>
+        <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400">แบบทดสอบ 4 ข้อ</span>
+          <button onclick="startUnit(3)" class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 text-xs font-bold shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i> เข้าสู่ Step 1 (Pre-Test)
+          </button>
+        </div>
+      </div><div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:shadow-lg hover:border-red-400 transition flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300">หน่วยที่ 4</span>
+            <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 07:20 นาที</span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug">การอพยพหนีไฟอย่างปลอดภัยและการปฐมพยาบาลเบื้องต้น</h3>
+          <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg">
+            <i class="fa-solid fa-list-check"></i> Pre-Test &gt; สื่อการสอน &gt; Post-Test (ข้อสอบตรงกัน 100%)
+          </p>
+          <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+            <li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">1. การระงับเหตุและอพยพหนีไฟสูตร “3 – 4 – 6 เดินชิดขวา รักษาชีวิต”</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">2. มาตรฐานของช่องทางหนีไฟและประตูหนีไฟ</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">3. ป้ายเตือนเพื่อความปลอดภัยและอุปกรณ์ช่วยชีวิตอื่นๆ</span></li><li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span class="">4. อันตรายของควันไฟและการปฐมพยาบาลเบื้องต้น</span></li>
+          </ul>
+        </div>
+        <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400">แบบทดสอบ 4 ข้อ</span>
+          <button onclick="startUnit(4)" class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 text-xs font-bold shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i> เข้าสู่ Step 1 (Pre-Test)
+          </button>
+        </div>
+      </div></div>
+  </section>
+
+  <!-- 4. LESSON FLOW SCREEN (STEP 1: PRE-TEST -> STEP 2: CONTENT/VIDEO -> STEP 3: POST-TEST SAME QUIZ) -->
+  <section id="p3-flow" class="page-view hidden max-w-4xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+      <button onclick="navigateTo('p2-modules')" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold hover:bg-slate-100 flex items-center gap-1.5 shadow-sm">
+        <i class="fa-solid fa-arrow-left"></i> กลับไปเลือกบทเรียน
+      </button>
+      <span id="flowUnitBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300">หน่วยการเรียนรู้ที่ 1</span>
+    </div>
+
+    <!-- Step Indicator -->
+    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 shadow-sm">
+      <div class="grid grid-cols-3 gap-2 text-center text-xs">
+        <div id="stepNav1" class="flex flex-col items-center gap-1 font-bold text-red-600">
+          <div class="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-xs">1</div>
+          <span class="">แบบทดสอบก่อนเรียน (Pre-Test)</span>
+        </div>
+        <div id="stepNav2" class="flex flex-col items-center gap-1 text-slate-400">
+          <div class="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs">2</div>
+          <span class="">เนื้อหาหลักสูตร &amp; วิดีโอ</span>
+        </div>
+        <div id="stepNav3" class="flex flex-col items-center gap-1 text-slate-400">
+          <div class="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs">3</div>
+          <span class="">แบบทดสอบหลังเรียน (Post-Test)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Pre-Quiz -->
+    <div id="flowStep1" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 shadow-md">
+      <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white mb-6">
+        <div class="flex items-center justify-between text-xs mb-1">
+          <span class="font-bold bg-white/20 px-2.5 py-0.5 rounded-full">Step 1: Pre-Test ก่อนรับชม</span>
+          <button onclick="openQuizBank()" class="hover:underline flex items-center gap-1"><i class="fa-solid fa-eye"></i> ตรวจดูข้อสอบคู่ขนาน</button>
+        </div>
+        <h3 class="text-xl font-black" id="preQuizTitle">แบบทดสอบก่อนเรียน: หน่วยที่ 1</h3>
+        <p class="text-xs text-amber-100">ทดสอบระดับความรู้พื้นฐาน (ข้อสอบชุดนี้จะนำไปใช้วัดผลอีกครั้งใน Post-Test หลังศึกษาจบ)</p>
+      </div>
+      <div id="preQuizQuestions" class="space-y-4"></div>
+      <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-end">
+        <button onclick="finishPreQuiz()" class="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow flex items-center gap-2">
+          <span class="">ส่งคำตอบ &gt; ไปยังเนื้อหาหลักสูตร</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Content & Video Mockup -->
+    <div id="flowStep2" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 shadow-md hidden">
+      <div class="p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white mb-6">
+        <div class="flex items-center justify-between text-xs mb-1">
+          <span class="font-bold bg-white/20 px-2.5 py-0.5 rounded-full">Step 2: สื่อการสอน &amp; สาระสำคัญ</span>
+          <span id="contentVideoDuration" class="bg-black/20 px-2 py-0.5 rounded-full">ความยาว 05:30 นาที</span>
+        </div>
+        <h3 class="text-xl font-black" id="contentTitle">เนื้อหาการเรียนรู้ประจำหน่วย</h3>
+        <p class="text-xs text-blue-100">ศึกษาเนื้อหาและสาระสำคัญให้ครบถ้วนเพื่อเตรียมทำแบบทดสอบหลังเรียน</p>
+      </div>
+
+      <!-- Video Mockup -->
+      <div class="relative w-full aspect-video bg-slate-950 rounded-2xl overflow-hidden border-2 border-slate-800 flex flex-col items-center justify-center text-white mb-6">
+        <button onclick="simulateVideo()" id="btnPlayVideo" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-500 flex items-center justify-center text-2xl shadow-xl transition transform hover:scale-110 active:scale-95">
+          <i class="fa-solid fa-play ml-1" id="videoPlayIcon"></i>
+        </button>
+        <p id="videoStatusText" class="mt-3 text-xs text-slate-300">กดปุ่มเพื่อเริ่มเล่นวิดีทัศน์บรรยายสรุป</p>
+        <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+          <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden mb-1">
+            <div id="videoProgress" class="bg-red-600 h-full w-0 transition-all duration-300"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span id="videoCurrent" class="">00:00</span>
+            <span id="videoTotal" class="">05:30</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Syllabus Topics Detailed Content -->
+      <div id="contentDetailedBody" class="space-y-3 mb-6"></div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-between">
+        <button onclick="gotoStep(1)" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-xs font-semibold">ย้อนกลับ</button>
+        <button onclick="gotoStep(3)" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow flex items-center gap-2">
+          <span class="">ศึกษาจบแล้ว &gt; ทำแบบทดสอบหลังเรียน (Post-Test)</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Post-Quiz (EXACT SAME QUESTIONS 100%) -->
+    <div id="flowStep3" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 shadow-md hidden">
+      <div class="p-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white mb-6">
+        <div class="flex items-center justify-between text-xs mb-1">
+          <span class="font-bold bg-white/20 px-2.5 py-0.5 rounded-full">Step 3: Post-Test หลังเรียน</span>
+          <span class="bg-white/20 px-2 py-0.5 rounded-full"><i class="fa-solid fa-check-double"></i> ข้อสอบชุดเดียวกับ Pre-Test 100%</span>
+        </div>
+        <h3 class="text-xl font-black" id="postQuizTitle">แบบทดสอบหลังเรียน: หน่วยที่ 1</h3>
+        <p class="text-xs text-red-100">ตอบคำถามเพื่อสรุปผลคะแนนและรับตราประทับเกรดมาตรฐานเปรียบเทียบก่อน-หลัง</p>
+      </div>
+      <div id="postQuizQuestions" class="space-y-4"></div>
+      <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-between">
+        <button onclick="gotoStep(2)" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-xs font-semibold">กลับไปดูเนื้อหา</button>
+        <button onclick="submitPostQuiz()" class="px-7 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-lg flex items-center gap-2">
+          <i class="fa-solid fa-award"></i> <span class="">ส่งคำตอบและดูผลประเมิน</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. RESULT SCREEN (RED STAMP & BEFORE/AFTER COMPARISON) -->
+  <section id="p4-result" class="page-view hidden max-w-xl mx-auto py-6">
+    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 shadow-xl text-center">
+      <span class="px-3 py-1 rounded-full bg-red-100 dark:bg-red-950 text-red-600 text-xs font-bold"><i class="fa-solid fa-circle-check"></i> สรุปผลการประเมินประจำหน่วย</span>
+      <h2 class="text-2xl font-black mt-2" id="resUnitTitle">ผลคะแนน: หน่วยที่ 1</h2>
+      <p class="text-xs text-slate-400">เปรียบเทียบผลคะแนนก่อนเรียน (Pre-Test) และหลังเรียน (Post-Test)</p>
+
+      <!-- Stamp -->
+      <div class="my-6 flex flex-col sm:flex-row items-center justify-center gap-6">
+        <div class="w-32 h-32 rounded-full score-stamp flex flex-col items-center justify-center p-2 bg-red-50/40 dark:bg-red-950/20">
+          <span class="text-[10px] font-black text-red-600 tracking-wider">SCORE</span>
+          <span class="text-3xl font-black text-red-600" id="resScorePct">100%</span>
+          <span class="text-xs font-bold text-red-500" id="resGrade">GRADE A+</span>
+        </div>
+        <div class="text-left bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs space-y-1.5 w-full sm:w-auto">
+          <div><span class="text-slate-400">คะแนนก่อนเรียน (Pre-Test):</span> <strong class="text-amber-500" id="resPreText">2 / 4</strong></div>
+          <div class="pt-1 border-t border-slate-200 dark:border-slate-700"><span class="text-slate-400">คะแนนหลังเรียน (Post-Test):</span> <strong class="text-red-600 text-sm" id="resPostText">4 / 4</strong></div>
+          <p class="text-[11px] font-semibold text-emerald-600 pt-1" id="resDiffText"><i class="fa-solid fa-arrow-trend-up"></i> พัฒนาการเพิ่มขึ้นอย่างชัดเจน</p>
+        </div>
+      </div>
+
+      <!-- Feedback CTA Banner -->
+      <div class="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-between gap-3 text-left mb-6">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid fa-star text-amber-500 text-xl"></i>
+          <div class="text-xs">
+            <strong class="text-slate-800 dark:text-white block">ประเมินความพึงพอใจเว็บไซต์</strong>
+            <span class="text-slate-400">ให้คะแนน 5 ดาวเพื่อพัฒนาสื่อ</span>
+          </div>
+        </div>
+        <button onclick="openFeedback()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs whitespace-nowrap">ประเมินทันที</button>
+      </div>
+
+      <div class="grid gap-3">
+        <button onclick="navigateTo('p2-modules')" class="py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-xs font-bold hover:bg-slate-100">เลือกบทเรียนอื่น</button>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. MINI-GAME (PASS SIMULATOR WITH CENTER FIRE & RIGHT EXTINGUISHER SELECTION) -->
+  
+
+  <!-- 7. EMERGENCY CONTACTS -->
+  <section id="p-emergency" class="page-view hidden max-w-3xl mx-auto space-y-6">
+    <div class="text-center">
+      <h2 class="text-2xl sm:text-3xl font-black text-red-600 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-phone-volume"></i> สายด่วนฉุกเฉินระดับชาติ
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-400 mt-1">แจ้งเหตุด่วนเหตุร้ายและอัคคีภัย 24 ชั่วโมง ทั่วประเทศไทย</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="p-5 rounded-3xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-center">
+        <span class="text-xs font-bold text-red-600 uppercase">แจ้งเหตุไฟไหม้/สัตว์มีพิษ</span>
+        <h3 class="text-4xl font-black text-red-600 my-2">199</h3>
+        <p class="text-xs text-slate-500">ศูนย์วิทยุพระราม สถานีดับเพลิง</p>
+        <a href="tel:199" class="mt-3 inline-block w-full py-2 rounded-xl bg-red-600 text-white font-bold text-xs">โทร 199 ทันที</a>
+      </div>
+      <div class="p-5 rounded-3xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center">
+        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">เหตุด่วนเหตุร้าย</span>
+        <h3 class="text-4xl font-black my-2">191</h3>
+        <p class="text-xs text-slate-500">สำนักงานตำรวจแห่งชาติ</p>
+        <a href="tel:191" class="mt-3 inline-block w-full py-2 rounded-xl bg-slate-800 text-white font-bold text-xs">โทร 191</a>
+      </div>
+      <div class="p-5 rounded-3xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-center">
+        <span class="text-xs font-bold text-emerald-600 uppercase">กู้ชีพ / แพทย์ฉุกเฉิน</span>
+        <h3 class="text-4xl font-black text-emerald-600 my-2">1669</h3>
+        <p class="text-xs text-slate-500">ศูนย์การแพทย์ฉุกเฉินแห่งชาติ (ฟรี)</p>
+        <a href="tel:1669" class="mt-3 inline-block w-full py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">โทร 1669</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- QUESTION BANK MODAL (PROVING PRE & POST ARE 100% IDENTICAL) -->
+<div id="modalQuizBank" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl p-6 border border-slate-200 dark:border-slate-800 max-h-[85vh] overflow-y-auto">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+      <h3 class="font-bold text-base flex items-center gap-2"><i class="fa-solid fa-clipboard-check text-red-600"></i> คลังข้อสอบ Pre/Post ตรงกัน 100%</h3>
+      <button onclick="closeQuizBank()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <div class="flex gap-2 my-3 overflow-x-auto">
+      <button onclick="renderBankTab(1)" id="bankTab1" class="px-3 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold">หน่วยที่ 1</button>
+      <button onclick="renderBankTab(2)" id="bankTab2" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold">หน่วยที่ 2</button>
+      <button onclick="renderBankTab(3)" id="bankTab3" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold">หน่วยที่ 3</button>
+      <button onclick="renderBankTab(4)" id="bankTab4" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold">หน่วยที่ 4</button>
+    </div>
+    <div id="bankQuestionsBody" class="space-y-3 text-xs"></div>
+    <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+      <button onclick="closeQuizBank()" class="px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- 5-STAR SATISFACTION FEEDBACK MODAL -->
+<div id="modalFeedback" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-6 border border-slate-200 dark:border-slate-800">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+      <h3 class="font-bold text-base flex items-center gap-2"><i class="fa-solid fa-star text-amber-500"></i> แบบประเมินความพึงพอใจ</h3>
+      <button onclick="closeFeedback()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <div id="feedbackFormArea" class="space-y-4 my-4 text-xs">
+      <div>
+        <label class="font-semibold block mb-1">1. ความถูกต้องและประโยชน์ของหลักสูตร 4 หน่วย</label>
+        <div class="flex gap-2 text-2xl text-amber-400 cursor-pointer" id="stars1">
+          <span onclick="setRate(1,1)" class="">★</span><span onclick="setRate(1,2)" class="">★</span><span onclick="setRate(1,3)" class="">★</span><span onclick="setRate(1,4)" class="">★</span><span onclick="setRate(1,5)" class="">★</span>
+        </div>
+      </div>
+      <div>
+        <label class="font-semibold block mb-1">2. ความง่ายและความสนุกของมินิเกม PASS</label>
+        <div class="flex gap-2 text-2xl text-amber-400 cursor-pointer" id="stars2">
+          <span onclick="setRate(2,1)" class="">★</span><span onclick="setRate(2,2)" class="">★</span><span onclick="setRate(2,3)" class="">★</span><span onclick="setRate(2,4)" class="">★</span><span onclick="setRate(2,5)" class="">★</span>
+        </div>
+      </div>
+      <div>
+        <label class="font-semibold block mb-1">ข้อเสนอแนะเพิ่มเติม</label>
+        <textarea id="feedbackText" rows="2" placeholder="พิมพ์ข้อคิดเห็นของคุณ..." class="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-xs"></textarea>
+      </div>
+      <button onclick="submitSurvey()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold shadow">ส่งแบบประเมิน</button>
+    </div>
+    <div id="feedbackThanks" class="hidden text-center py-6 space-y-2">
+      <i class="fa-solid fa-circle-check text-4xl text-emerald-500"></i>
+      <h4 class="font-bold text-base">ขอบคุณสำหรับข้อเสนอแนะ!</h4>
+      <p class="text-xs text-slate-400">ระบบได้บันทึกคะแนนประเมินเรียบร้อยแล้ว</p>
+      <button onclick="closeFeedback()" class="mt-3 px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold">เสร็จสิ้น</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-4 px-4 text-center text-xs text-slate-400">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    <span class="">ระบบสื่อการเรียนรู้อัคคีภัยมาตรฐาน (Fire Safety Education System) © 2025</span>
+    <div class="flex gap-4">
+      <button onclick="openFeedback()" class="text-amber-500 hover:underline">ประเมิน 5 ดาว</button>
+      <button onclick="navigateTo('p-emergency')" class="hover:underline">เบอร์ฉุกเฉิน 199</button>
+      <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="hover:underline">กลับด้านบน</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // EXACT SYLLABUS CURRICULUM DATA & SAME PRE/POST QUESTIONS
+  const curriculum = {
+    1: {
+      id: 1,
+      name: 'ความรู้พื้นฐานเกี่ยวกับอัคคีภัยและธรรมชาติของไฟ',
+      duration: '05:30',
+      topics: [
+        { title: '1. ความหมายของอัคคีภัย', desc: 'ภัยอันตรายที่เกิดจากไฟที่ขาดการควบคุมดูแล จนเกิดการลุกลามต่อเนื่อง สร้างความเสียหายต่อชีวิต ทรัพย์สิน และสิ่งแวดล้อม' },
+        { title: '2. องค์ประกอบของไฟ (Triangle of Fire)', desc: 'ไฟเกิดขึ้นได้เมื่อมี 3 องค์ประกอบครบถ้วน คือ: 1. เชื้อเพลิง (Fuel), 2. ความร้อน (Heat), 3. ออกซิเจน (Oxygen) พร้อมปฏิกิริยาลูกโซ่เคมี (Chemical Chain Reaction)' },
+        { title: '3. การจำแนกประเภทของไฟ (Classification of Fire)', desc: '• Class A: ของแข็งทั่วไป (ไม้, กระดาษ, ยาง, พลาสติก)\n• Class B: ของเหลวและก๊าซไวไฟ (น้ำมัน, ทินเนอร์, แอลกอฮอล์, ก๊าซหุงต้ม)\n• Class C: อุปกรณ์ไฟฟ้าที่มีกระแสไฟไหลผ่าน (ตู้คอนโทรล, หม้อแปลง, สายไฟ)\n• Class D: โลหะติดไฟ (แมกนีเซียม, ไทเทเนียม, โซเดียม)\n• Class K: ไขมันสัตว์และน้ำมันปรุงอาหารในครัวเรือน' },
+        { title: '4. ระยะเวลาการเกิดไฟไหม้และการลุกลาม', desc: 'แบ่งเป็น 3 ขั้น: 1. ขั้นเริ่มต้น (Incipient) 0-4 นาที อุณหภูมิยังไม่สูงดับง่ายด้วยถังดับเพลิง 2. ขั้นลุกลาม (Free Burning) เกิด Flashover เผาไหม้รุนแรง 3. ขั้นมอดดับ (Smoldering) ขาดออกซิเจนแต่มีความร้อนสะสม' },
+        { title: '5. การสังเกตและวิเคราะห์ลักษณะของควันไฟ', desc: '• ควันสีขาว: เชื้อเพลิงมีความชื้นสูง เช่น หญ้าสด หรือสารเคมีไอน้ำ\n• ควันสีเทา: การเผาไหม้ของไม้หรือกระดาษที่ได้รับออกซิเจนพอสมควร\n• ควันสีดำเข้ม/หนาแน่น: เกิดจากสารไฮโดรคาร์บอน น้ำมัน พลาสติก และยาง มีก๊าซพิษ CO และไซยาไนด์สูงมาก' }
+      ],
+      questions: [
+        {
+          q: '1. องค์ประกอบของไฟ (Triangle of Fire) ประกอบด้วยอะไรบ้าง?',
+          options: ['เชื้อเพลิง, ความร้อน, ออกซิเจน', 'ควัน, เปลวไฟ, เถ้าถ่าน', 'ก๊าซไนโตรเจน, แรงดัน, เชื้อเพลิง', 'ประกายไฟ, น้ำ, คาร์บอนไดออกไซด์'],
+          ans: 0
+        },
+        {
+          q: '2. เพลิงไหม้ประเภท Class B เกิดจากเชื้อเพลิงชนิดใด?',
+          options: ['ไม้ กระดาษ ผ้า', 'ของเหลวไวไฟและก๊าซ เช่น น้ำมัน ทินเนอร์ ก๊าซ LPG', 'อุปกรณ์ไฟฟ้าที่มีกระแสไหลผ่าน', 'น้ำมันพืชในกระทะครัว'],
+          ans: 1
+        },
+        {
+          q: '3. ช่วงเวลาสำคัญที่สุดในการดับเพลิงขั้นเริ่มต้น (Incipient Stage) คือกี่นาทีแรก?',
+          options: ['0 - 4 นาทีแรก', '15 - 20 นาที', '30 - 45 นาที', '1 ชั่วโมงเป็นต้นไป'],
+          ans: 0
+        },
+        {
+          q: '4. ควันไฟสีดำเข้มและหนาแน่น บ่งบอกถึงการเผาไหม้ของสารใด?',
+          options: ['หญ้าสดและใบไม้เปียก', 'สารปิโตรเลียม น้ำมัน พลาสติก และยาง', 'กระดาษแห้งที่มีออกซิเจนสมบูรณ์', 'ไอน้ำจากน้ำร้อน'],
+          ans: 1
+        }
+      ]
+    },
+    2: {
+      id: 2,
+      name: 'ถังดับเพลิงและการใช้งานอย่างปลอดภัย',
+      duration: '06:15',
+      topics: [
+        { title: '1. ประเภทของเครื่องดับเพลิง 6 ชนิดหลัก', desc: '1. ผงเคมีแห้ง (Dry Chemical) สำหรับไฟ ABC 2. ก๊าซคาร์บอนไดออกไซด์ (CO2) ไฟ BC ไร้คราบ 3. โฟม (Foam) ไฟ A, B คลุมผิวน้ำมัน 4. สารสะอาด (Clean Agent/Halotron) ห้องเซิร์ฟเวอร์ 5. น้ำยาโฟมสูตรน้ำ/Low Pressure Water Mist ไฟ A, K 6. น้ำสะสมแรงดัน (Water) ไฟ Class A เท่านั้น' },
+        { title: '2. ข้อกำหนดการติดตั้งเครื่องดับเพลิงที่ถูกต้อง', desc: 'ตามกฎหมาย ส่วนบนสุดของตัวถังต้องสูงจากพื้นไม่เกิน 1.50 เมตร ติดตั้งในตำแหน่งที่เห็นเด่นชัด เดินหยิบสะดวก ไม่มีสิ่งของวางกีดขวาง และมีป้ายชี้บ่งชัดเจน พร้อมตรวจเช็กเกจวัดความดันทุกเดือน' },
+        { title: '3. ขั้นตอนและวิธีใช้เครื่องดับเพลิง (ดึง-ปลด-กด-ส่าย / PASS)', desc: '• P - Pull (ดึงสลักนิรภัย)\n• A - Aim (ปลดสายและเล็งหัวฉีดไปที่ฐานของไฟ ระยะ 1.5 - 2 เมตร ยืนเหนือลม)\n• S - Squeeze (กดคันบีบอย่างต่อเนื่อง)\n• S - Sweep (ส่ายหัวฉีดไปมาทางซ้ายและขวาให้ทั่วฐานเพลิง)' }
+      ],
+      questions: [
+        {
+          q: '1. กฎหมายกำหนดให้ส่วนบนสุดของถังดับเพลิงติดตั้งสูงจากพื้นไม่เกินเท่าใด?',
+          options: ['ไม่เกิน 1.50 เมตร', 'ไม่เกิน 2.50 เมตร', 'ไม่เกิน 3.00 เมตร', 'วางบนพื้นเท่านั้นห้ามแขวน'],
+          ans: 0
+        },
+        {
+          q: '2. สูตรจำการใช้งานถังดับเพลิง 4 ขั้นตอน (PASS) ตรงกับข้อใด?',
+          options: ['ดึง - ปลด - กด - ส่าย (Pull, Aim, Squeeze, Sweep)', 'เปิด - เท - สาด - วิ่ง', 'ดัน - เล็ง - บีบ - พ่น', 'กด - ดึง - ฉีด - ถอย'],
+          ans: 0
+        },
+        {
+          q: '3. ถังดับเพลิงชนิดก๊าซ CO2 (Carbon Dioxide) เหมาะที่สุดสำหรับดับไฟประเภทใด?',
+          options: ['ไฟ Class B และ C (ของเหลวไวไฟและอุปกรณ์ไฟฟ้า โดยไม่ทิ้งคราบ)', 'ไฟ Class A ไม้และกระดาษ', 'ไฟ Class D โลหะติดไฟ', 'ไฟป่าในที่โล่ง'],
+          ans: 0
+        },
+        {
+          q: '4. ขณะใช้เครื่องดับเพลิง ผู้ใช้งานควรยืนในตำแหน่งใดเมื่อเทียบกับทิศทางลม?',
+          options: ['ยืนอยู่เหนือลมเสมอ ห่างฐานไฟ 1.5 - 2 เมตร', 'ยืนอยู่ใต้ลมเพื่อพัดสารเคมี', 'ยืนหันหลังให้ประตูหนีไฟ', 'ยืนใกล้เปลวไฟน้อยกว่า 50 ซม.'],
+          ans: 0
+        }
+      ]
+    },
+    3: {
+      id: 3,
+      name: 'การป้องกันภัยและการเตรียมพร้อมรับมือเมื่อเกิดเหตุ',
+      duration: '06:00',
+      topics: [
+        { title: '1. หลักการป้องกันและการสังเกตสาเหตุของอัคคีภัย', desc: 'สาเหตุหลัก: ไฟฟ้าลัดวงจร ปลั๊กพ่วงไม่ได้มาตรฐาน การลืมปิดเตาแก๊ส ก้นบุหรี่ และการจัดเก็บสารเคมีไม่ถูกต้อง การป้องกันเริ่มจากการตรวจเช็กสายไฟและอุปกรณ์ตัดไฟอัตโนมัติ (Safe-T-Cut)' },
+        { title: '2. การเตรียมความพร้อมและระบบป้องกันภัยในอาคารสูง', desc: 'ระบบสำคัญ: Smoke Detector, Heat Detector, ปุ่มกดแจ้งเหตุเพลิงไหม้ (Manual Pull Station), กระดิ่งเตือนภัย, สปริงเกลอร์ฉีดน้ำอัตโนมัติ (Fire Sprinkler), และบันไดหนีไฟอัดแรงดันบวกป้องกันควัน' },
+        { title: '3. ลำดับขั้นตอนการปฏิบัติเมื่อพบเหตุไฟไหม้ 4 ขั้นตอน', desc: '• FIRE: พบเหตุไฟไหม้ ประเมินสถานการณ์เบื้องต้น\n• ALARM: กดปุ่มสัญญาณเตือนภัยหรือตะโกนบอกผู้อื่นทันที\n• EXTINGUISH: ดับเพลิงด้วยถังดับเพลิงหากไฟยังเล็กและปลอดภัย\n• ESCAPE: อพยพออกจากพื้นที่ทันทีหากคุมเพลิงไม่ได้ภายใน 1 นาที' },
+        { title: '4. ลักษณะของจุดรวมพล (Assembly Area) ที่เหมาะสม', desc: 'เป็นพื้นที่โล่งแจ้ง อากาศถ่ายเท ปลอดภัยจากสิ่งของตกหล่นและควันไฟ ไม่อยู่ใต้สายไฟแรงสูง และไม่กีดขวางเส้นทางการปฏิบัติงานของรถดับเพลิงและรถพยาบาล' }
+      ],
+      questions: [
+        {
+          q: '1. ลำดับขั้นตอน 4 ขั้นตอนเมื่อพบเหตุเพลิงไหม้คือข้อใด?',
+          options: ['FIRE – ALARM – EXTINGUISH – ESCAPE', 'RUN – HIDE – FIGHT – CALL', 'SEARCH – RESCUE – REPORT – LEAVE', 'LOOK – LISTEN – SMELL – ACT'],
+          ans: 0
+        },
+        {
+          q: '2. ระบบใดในอาคารสูงทำหน้าที่ฉีดน้ำอัตโนมัติเมื่อเกิดความร้อนสูงถึงเกณฑ์?',
+          options: ['Fire Sprinkler System (หัวกระจายน้ำดับเพลิง)', 'Manual Pull Station', 'Smoke Detector', 'Emergency Light'],
+          ans: 0
+        },
+        {
+          q: '3. จุดรวมพล (Assembly Area) ควรมีลักษณะอย่างไร?',
+          options: ['พื้นที่โล่งแจ้ง อากาศถ่ายเท ปลอดภัยจากสิ่งของตกหล่น ไม่ขวางรถดับเพลิง', 'ในห้องโถงชั้นล่างของอาคาร', 'บริเวณบันไดหนีไฟชั้น 1', 'ลานจอดรถใต้ดิน'],
+          ans: 0
+        },
+        {
+          q: '4. เมื่อพบไฟไหม้ที่ไม่สามารถควบคุมได้ด้วยถังดับเพลิง ควรทำอย่างไรเป็นอันดับแรก?',
+          options: ['กดสัญญาณเตือนภัย ALARM และรีบอพยพหนีไฟ ESCAPE', 'ถ่ายรูปเพื่อส่งรายงาน', 'เข้าไปเก็บทรัพย์สินมีค่า', 'หลบอยู่ภายในห้องปิดประตูให้มิดชิด'],
+          ans: 0
+        }
+      ]
+    },
+    4: {
+      id: 4,
+      name: 'การอพยพหนีไฟอย่างปลอดภัยและการปฐมพยาบาลเบื้องต้น',
+      duration: '07:20',
+      topics: [
+        { title: '1. การระงับเหตุและอพยพหนีไฟสูตร “3 – 4 – 6 เดินชิดขวา รักษาชีวิต”', desc: '• 3 สิ่งต้องทำ: ตั้งสติ แจ้งเตือน อพยพ\n• 4 ขั้นตอนหนี: ก้มต่ำ ใช้ผ้าชุบน้ำปิดจมูก จับผนัง เดินชิดขวา\n• 6 ข้อห้าม: 1. ห้ามใช้ลิฟต์ 2. ห้ามย้อนกลับไปเอาของ 3. ห้ามกระโดดจากที่สูง 4. ห้ามเปิดประตูทันทีโดยไม่จับลูกบิด 5. ห้ามวิ่ง 6. ห้ามหลบในห้องน้ำ' },
+        { title: '2. มาตรฐานของช่องทางหนีไฟและประตูหนีไฟ', desc: 'ช่องทางหนีไฟกว้างไม่น้อยกว่า 90 เซนติเมตร ไม่มีสิ่งของกีดขวาง ประตูหนีไฟต้องเปิดออกตามทิศทางการหนี มีคานผลักนิรภัย (Panic Bar) และสามารถทนไฟได้ไม่น้อยกว่า 1 - 2 ชั่วโมง' },
+        { title: '3. ป้ายเตือนเพื่อความปลอดภัยและอุปกรณ์ช่วยชีวิตอื่นๆ', desc: 'ป้ายทางออกหนีไฟเรืองแสงหรือมีไฟสำรองติดสว่างตลอดเวลา, ไฟส่องสว่างฉุกเฉิน (Emergency Light), ตู้สายน้ำดับเพลิง (Fire Hose Reel) และถังออกซิเจนฉุกเฉิน' },
+        { title: '4. อันตรายของควันไฟและการปฐมพยาบาลเบื้องต้น', desc: '• ควันไฟมีก๊าซ CO และก๊าซไซยาไนด์ ทำให้หมดสติใน 1-2 นาที ต้องหมอบคลานต่ำระดับไม่เกิน 30 ซม. จากพื้น\n• แผลไฟไหม้: ใช้น้ำสะอาดอุณหภูมิห้องไหลผ่าน 10-20 นาที ห้ามทายาสีฟันหรือน้ำแข็ง\n• หากไฟติดตัว: ใช้หลัก “หยุด - ทิ้งตัวลงนอน - กลิ้งตัว” (Stop, Drop and Roll)' }
+      ],
+      questions: [
+        {
+          q: '1. ในสูตรอพยพหนีไฟ “เดินชิดขวา รักษาชีวิต” เหตุใดจึงต้องเดินชิดขวา?',
+          options: ['เพื่อให้บันไดฝั่งซ้ายว่างสำหรับเจ้าหน้าที่ดับเพลิงขึ้นปฏิบัติงาน', 'เพราะประตูด้านขวาเปิดง่ายกว่า', 'เพื่อหลีกเลี่ยงควันไฟที่อยู่ฝั่งซ้าย', 'เป็นเพียงความเชื่อเรื่องโชคลาง'],
+          ans: 0
+        },
+        {
+          q: '2. ข้อห้ามสำคัญที่สุดขณะอพยพหนีไฟในอาคารสูงคือข้อใด?',
+          options: ['ห้ามใช้ลิฟต์โดยเด็ดขาด ให้ใช้บันไดหนีไฟ', 'ห้ามดื่มน้ำ', 'ห้ามใส่รองเท้าผ้าใบ', 'ห้ามพกไฟฉาย'],
+          ans: 0
+        },
+        {
+          q: '3. หากเปลวไฟลุกลามติดเสื้อผ้าของคุณ ควรปฏิบัติตามหลักการใด?',
+          options: ['Stop, Drop and Roll (หยุด ทิ้งตัวลงนอน และกลิ้งตัวไปมา)', 'วิ่งให้เร็วที่สุดเพื่อดับลม', 'กระโดดลงสระน้ำทันที', 'ถอดเสื้อผ้าแล้วโบกไปมา'],
+          ans: 0
+        },
+        {
+          q: '4. การปฐมพยาบาลแผลถูกความร้อนหรือไฟลวกเบื้องต้นที่ถูกต้องคือข้อใด?',
+          options: ['ใช้น้ำสะอาดอุณหภูมิห้องไหลผ่านแผล 10 - 20 นาที และห้ามทายาสีฟัน', 'ใช้น้ำแข็งประคบโดยตรงทันที', 'ทายาสีฟันหรือน้ำปลาเพื่อระบายความร้อน', 'เจาะตุ่มน้ำพองออกให้แห้ง'],
+          ans: 0
+        }
+      ]
+    }
+  };
+
+  // APP STATE
+  const state = {
+    user: { nickname: 'ผู้เรียนทั่วไป', username: 'guest' },
+    currentUnit: 1,
+    currentStep: 1,
+    preAnswers: {},
+    postAnswers: {},
+    preScore: 0,
+    postScore: 0,
+    videoInterval: null,
+    scenarioIndex: 0,
+    selectedExt: null,
+    wins: 0
+  };
+
+  const scenarios = [
+    { title: 'ฉากที่ 1: เพลิงไหม้กองไม้ เอกสาร และผ้าแห้งในสำนักงาน', class: 'CLASS A', fuel: 'ของแข็งทั่วไป (ไม้/กระดาษ/ผ้า)', correct: 'dry', hint: 'ไฟ Class A แนะนำผงเคมีแห้ง (ABC) ช่วยคลุมและดับแกนใน' },
+    { title: 'ฉากที่ 2: เพลิงไหม้ถังน้ำมันเบนซินและสารทำละลายไวไฟ', class: 'CLASS B', fuel: 'ของเหลวไวไฟ (น้ำมันเบนซิน)', correct: 'co2', hint: 'ไฟ Class B ก๊าซ CO2 หรือโฟม ช่วยตัดออกซิเจนอย่างมีประสิทธิภาพ' },
+    { title: 'ฉากที่ 3: เพลิงไหม้แผงสวิตช์และตู้เซิร์ฟเวอร์คอมพิวเตอร์', class: 'CLASS C', fuel: 'อุปกรณ์ไฟฟ้าที่มีกระแสไฟฟ้า', correct: 'clean', hint: 'ไฟ Class C แนะนำสารสะอาด (Clean Agent) หรือ CO2 ที่ไม่ทิ้งคราบเสียหาย' },
+    { title: 'ฉากที่ 4: เพลิงไหม้น้ำมันปรุงอาหารเดือดลุกไหม้ในกระทะครัว', class: 'CLASS K', fuel: 'ไขมันและน้ำมันพืชในครัว', correct: 'wet', hint: 'ไฟ Class K ต้องใช้เคมีสูตรน้ำ (Wet Chemical) ทำปฏิกิริยาสบู่เคลือบผิวน้ำมัน' }
+  ];
+
+  // NAVIGATION
+  function navigateTo(pageId) {
+    document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+    const target = document.getElementById(pageId);
+    if (target) target.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // DRAWER
+  function toggleDrawer() {
+    const drawer = document.getElementById('drawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const isOpen = !drawer.classList.contains('translate-x-full');
+    if (isOpen) {
+      drawer.classList.add('translate-x-full');
+      backdrop.classList.add('hidden');
+    } else {
+      drawer.classList.remove('translate-x-full');
+      backdrop.classList.remove('hidden');
+    }
+  }
+
+  // DARK MODE
+  function toggleDarkMode() {
+    document.documentElement.classList.toggle('dark');
+  }
+
+  // AUTH
+  function switchAuthTab(type) {
+    const isLogin = type === 'login';
+    document.getElementById('formLogin').classList.toggle('hidden', !isLogin);
+    document.getElementById('formRegister').classList.toggle('hidden', isLogin);
+    document.getElementById('authTabLogin').classList.toggle('bg-white', isLogin);
+    document.getElementById('authTabLogin').classList.toggle('dark:bg-slate-800', isLogin);
+    document.getElementById('authTabLogin').classList.toggle('shadow', isLogin);
+    document.getElementById('authTabRegister').classList.toggle('bg-white', !isLogin);
+    document.getElementById('authTabRegister').classList.toggle('dark:bg-slate-800', !isLogin);
+    document.getElementById('authTabRegister').classList.toggle('shadow', !isLogin);
+  }
+
+  function handleAuth(e, type) {
+    e.preventDefault();
+    if (type === 'login') {
+      const u = document.getElementById('loginUser').value.trim();
+      setUser(u || 'ผู้เรียน');
+    } else {
+      const nick = document.getElementById('regNick').value.trim();
+      setUser(nick || 'ผู้เรียนใหม่');
+    }
+    navigateTo('p2-modules');
+  }
+
+  function loginGuest() {
+    setUser('ผู้เรียนทั่วไป');
+    navigateTo('p2-modules');
+  }
+
+  function setUser(name) {
+    state.user.nickname = name;
+    document.getElementById('navUsername').innerText = name;
+    document.getElementById('drawerUser').innerText = name;
+    document.getElementById('navAvatar').innerText = name.charAt(0);
+    document.getElementById('drawerAvatar').innerText = name.charAt(0);
+  }
+
+  // RENDER MODULES
+  function renderModules() {
+    const grid = document.getElementById('modulesGrid');
+    grid.innerHTML = '';
+    [1, 2, 3, 4].forEach(id => {
+      const u = curriculum[id];
+      const card = document.createElement('div');
+      card.className = 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:shadow-lg hover:border-red-400 transition flex flex-col justify-between';
+      card.innerHTML = `
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300">หน่วยที่ ${u.id}</span>
+            <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> ${u.duration} นาที</span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug">${u.name}</h3>
+          <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-lg">
+            <i class="fa-solid fa-list-check"></i> Pre-Test &gt; สื่อการสอน &gt; Post-Test (ข้อสอบตรงกัน 100%)
+          </p>
+          <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+            ${u.topics.map(t => `<li class="flex items-start gap-1.5"><i class="fa-solid fa-circle-check text-red-500 mt-0.5 shrink-0 text-[10px]"></i> <span>${t.title}</span></li>`).join('')}
+          </ul>
+        </div>
+        <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400">แบบทดสอบ 4 ข้อ</span>
+          <button onclick="startUnit(${u.id})" class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 text-xs font-bold shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i> เข้าสู่ Step 1 (Pre-Test)
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // START UNIT FLOW
+  function startUnit(unitId) {
+    state.currentUnit = unitId;
+    state.currentStep = 1;
+    state.preAnswers = {};
+    state.postAnswers = {};
+    const u = curriculum[unitId];
+
+    document.getElementById('flowUnitBadge').innerText = `หน่วยการเรียนรู้ที่ ${u.id}: ${u.name}`;
+    document.getElementById('preQuizTitle').innerText = `แบบทดสอบก่อนเรียน: หน่วยที่ ${u.id} (${u.name})`;
+    document.getElementById('contentTitle').innerText = `เนื้อหาหลักสูตร: หน่วยที่ ${u.id}`;
+    document.getElementById('contentVideoDuration').innerText = `ความยาว ${u.duration} นาที`;
+    document.getElementById('postQuizTitle').innerText = `แบบทดสอบหลังเรียน: หน่วยที่ ${u.id} (${u.name})`;
+
+    // Populate Detailed Syllabus Content
+    const contentArea = document.getElementById('contentDetailedBody');
+    contentArea.innerHTML = u.topics.map(t => `
+      <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+        <h4 class="font-bold text-xs sm:text-sm text-red-600 dark:text-red-400 mb-1">${t.title}</h4>
+        <p class="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed">${t.desc}</p>
+      </div>
+    `).join('');
+
+    renderQuiz('pre', u.questions);
+    renderQuiz('post', u.questions);
+
+    gotoStep(1);
+    navigateTo('p3-flow');
+  }
+
+  function gotoStep(step) {
+    state.currentStep = step;
+    document.getElementById('flowStep1').classList.toggle('hidden', step !== 1);
+    document.getElementById('flowStep2').classList.toggle('hidden', step !== 2);
+    document.getElementById('flowStep3').classList.toggle('hidden', step !== 3);
+
+    [1, 2, 3].forEach(s => {
+      const nav = document.getElementById(`stepNav${s}`);
+      if (s === step) {
+        nav.className = 'flex flex-col items-center gap-1 font-bold text-red-600';
+        nav.children[0].className = 'w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-xs shadow';
+      } else if (s < step) {
+        nav.className = 'flex flex-col items-center gap-1 font-bold text-emerald-600';
+        nav.children[0].className = 'w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs';
+      } else {
+        nav.className = 'flex flex-col items-center gap-1 text-slate-400';
+        nav.children[0].className = 'w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs';
+      }
+    });
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  }
+
+  function renderQuiz(type, questions) {
+    const container = document.getElementById(type === 'pre' ? 'preQuizQuestions' : 'postQuizQuestions');
+    container.innerHTML = '';
+    questions.forEach((qObj, idx) => {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 space-y-2';
+      qDiv.innerHTML = `
+        <p class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">${qObj.q}</p>
+        <div class="space-y-1.5 pt-1">
+          ${qObj.options.map((opt, oIdx) => `
+            <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 cursor-pointer text-xs">
+              <input type="radio" name="${type}_q_${idx}" value="${oIdx}" onchange="recordAnswer('${type}', ${idx}, ${oIdx})" class="text-red-600 focus:ring-red-500"/>
+              <span>${opt}</span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+      container.appendChild(qDiv);
+    });
+  }
+
+  function recordAnswer(type, qIdx, oIdx) {
+    if (type === 'pre') state.preAnswers[qIdx] = oIdx;
+    else state.postAnswers[qIdx] = oIdx;
+  }
+
+  function finishPreQuiz() {
+    const u = curriculum[state.currentUnit];
+    let score = 0;
+    u.questions.forEach((q, i) => {
+      if (state.preAnswers[i] === q.ans) score++;
+    });
+    state.preScore = score;
+    gotoStep(2);
+  }
+
+  function simulateVideo() {
+    const bar = document.getElementById('videoProgress');
+    const icon = document.getElementById('videoPlayIcon');
+    const txt = document.getElementById('videoStatusText');
+    icon.className = 'fa-solid fa-pause';
+    txt.innerText = 'กำลังเล่นวิดีทัศน์สรุปสาระสำคัญ...';
+    let p = 0;
+    clearInterval(state.videoInterval);
+    state.videoInterval = setInterval(() => {
+      p += 20;
+      bar.style.width = p + '%';
+      if (p >= 100) {
+        clearInterval(state.videoInterval);
+        icon.className = 'fa-solid fa-rotate-right';
+        txt.innerText = 'วิดีทัศน์จบแล้ว พร้อมทำแบบทดสอบหลังเรียน';
+      }
+    }, 400);
+  }
+
+  function submitPostQuiz() {
+    const u = curriculum[state.currentUnit];
+    let score = 0;
+    u.questions.forEach((q, i) => {
+      if (state.postAnswers[i] === q.ans) score++;
+    });
+    state.postScore = score;
+
+    // Show Results
+    document.getElementById('resUnitTitle').innerText = `ผลคะแนน: หน่วยที่ ${u.id} (${u.name})`;
+    document.getElementById('resPreText').innerText = `${state.preScore} / ${u.questions.length}`;
+    document.getElementById('resPostText').innerText = `${state.postScore} / ${u.questions.length}`;
+    const pct = Math.round((state.postScore / u.questions.length) * 100);
+    document.getElementById('resScorePct').innerText = `${pct}%`;
+    document.getElementById('resGrade').innerText = pct >= 80 ? 'GRADE A+' : (pct >= 50 ? 'GRADE B' : 'PASS');
+    
+    const diff = state.postScore - state.preScore;
+    document.getElementById('resDiffText').innerHTML = diff > 0 
+      ? `<i class="fa-solid fa-arrow-trend-up"></i> พัฒนาการเพิ่มขึ้น +${diff} ข้อหลังการเรียนรู้`
+      : `<i class="fa-solid fa-check"></i> คะแนนอยู่ในเกณฑ์มาตรฐานความปลอดภัย`;
+
+    navigateTo('p4-result');
+  }
+
+  // MINI-GAME PASS LOGIC
+  function updateScenarioView() {
+    const s = scenarios[state.scenarioIndex];
+    document.getElementById('scenBadge').innerText = s.class;
+    document.getElementById('scenTitle').innerText = s.title;
+    document.getElementById('scenFuelText').innerText = `เชื้อเพลิง: ${s.fuel}`;
+    document.getElementById('scenHint').innerText = `คำแนะนำ: ${s.hint}`;
+    document.getElementById('scenStatus').innerText = 'กำลังลุกไหม้รุนแรง 🔥';
+    document.getElementById('fireIcon').className = 'text-7xl transition-all duration-500 animate-bounce';
+    document.getElementById('fireIcon').innerText = '🔥';
+    state.selectedExt = null;
+    document.getElementById('btnActionExtinguish').disabled = true;
+    document.getElementById('passStateBadge').innerText = 'รอเลือกถัง';
+    document.getElementById('extFeedback').innerText = 'กรุณาคลิกเลือกถังดับเพลิงที่เหมาะสมกับเชื้อเพลิงในฉาก';
+    ['dry', 'co2', 'wet', 'clean'].forEach(k => {
+      const btn = document.getElementById('ext' + k.charAt(0).toUpperCase() + k.slice(1));
+      if (btn) btn.classList.remove('border-red-500', 'bg-red-50', 'dark:bg-red-950/40');
+    });
+  }
+
+  function cycleScenario() {
+    state.scenarioIndex = (state.scenarioIndex + 1) % scenarios.length;
+    updateScenarioView();
+  }
+
+  function pickExt(type) {
+    state.selectedExt = type;
+    ['dry', 'co2', 'wet', 'clean'].forEach(k => {
+      const btn = document.getElementById('ext' + k.charAt(0).toUpperCase() + k.slice(1));
+      if (btn) {
+        if (k === type) {
+          btn.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-950/40');
+        } else {
+          btn.classList.remove('border-red-500', 'bg-red-50', 'dark:bg-red-950/40');
+        }
+      }
+    });
+
+    const currentS = scenarios[state.scenarioIndex];
+    const isCorrect = (type === currentS.correct) || (type === 'dry' && currentS.class === 'CLASS A');
+    
+    if (isCorrect) {
+      document.getElementById('extFeedback').innerHTML = `<span class="text-emerald-600 font-bold">✓ ถูกต้อง!</span> ถังนี้สามารถใช้ดับไฟประเภท ${currentS.class} ได้`;
+      document.getElementById('btnActionExtinguish').disabled = false;
+      document.getElementById('passStateBadge').innerText = 'พร้อมฉีดดับไฟ';
+    } else {
+      document.getElementById('extFeedback').innerHTML = `<span class="text-red-500 font-bold">⚠️ ยังไม่เหมาะสม</span> ลองพิจารณาประเภทไฟ ${currentS.class} ใหม่อีกครั้ง`;
+      document.getElementById('btnActionExtinguish').disabled = true;
+      document.getElementById('passStateBadge').innerText = 'เลือกถังใหม่';
+    }
+  }
+
+  function doExtinguish() {
+    const fire = document.getElementById('fireIcon');
+    const status = document.getElementById('scenStatus');
+    status.innerText = 'กำลังพ่นสารดับเพลิงตามหลัก P-A-S-S... 💨';
+    fire.className = 'text-5xl transition-all duration-700 opacity-60';
+    setTimeout(() => {
+      fire.className = 'text-4xl transition-all duration-700 opacity-20';
+      fire.innerText = '💨';
+      status.innerText = 'เพลิงสงบเรียบร้อยแล้ว! 🎯';
+      state.wins++;
+      document.getElementById('gameWinCount').innerText = state.wins;
+      document.getElementById('btnActionExtinguish').disabled = true;
+      setTimeout(() => {
+        cycleScenario();
+      }, 1500);
+    }, 1000);
+  }
+
+  // QUESTION BANK MODAL
+  function openQuizBank() {
+    document.getElementById('modalQuizBank').classList.remove('hidden');
+    renderBankTab(1);
+  }
+  function closeQuizBank() {
+    document.getElementById('modalQuizBank').classList.add('hidden');
+  }
+  function renderBankTab(uId) {
+    [1, 2, 3, 4].forEach(i => {
+      const b = document.getElementById(`bankTab${i}`);
+      if (b) {
+        b.className = i === uId 
+          ? 'px-3 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold'
+          : 'px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold';
+      }
+    });
+    const u = curriculum[uId];
+    const body = document.getElementById('bankQuestionsBody');
+    body.innerHTML = u.questions.map((q, idx) => `
+      <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        <strong class="text-slate-800 dark:text-white block mb-1">${q.q}</strong>
+        <p class="text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]"><i class="fa-solid fa-check"></i> คำตอบที่ถูกต้อง: ${q.options[q.ans]}</p>
+        <span class="text-[10px] text-slate-400">ใช้เป็นทั้งข้อสอบ Pre-Test และ Post-Test ชุดเดียวกัน</span>
+      </div>
+    `).join('');
+  }
+
+  // FEEDBACK MODAL
+  function openFeedback() {
+    document.getElementById('modalFeedback').classList.remove('hidden');
+    document.getElementById('feedbackFormArea').classList.remove('hidden');
+    document.getElementById('feedbackThanks').classList.add('hidden');
+  }
+  function closeFeedback() {
+    document.getElementById('modalFeedback').classList.add('hidden');
+  }
+  function setRate(grp, val) {
+    const el = document.getElementById(`stars${grp}`);
+    Array.from(el.children).forEach((s, idx) => {
+      s.style.opacity = idx < val ? '1' : '0.3';
+    });
+  }
+  function submitSurvey() {
+    document.getElementById('feedbackFormArea').classList.add('hidden');
+    document.getElementById('feedbackThanks').classList.remove('hidden');
+  }
+
+  // INIT
+  document.addEventListener('DOMContentLoaded', () => {
+    renderModules();
+    updateScenarioView();
+  });
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7I3ksoeYs4txWYzVBi6Qtl4AdUkSjiWvQxxvzuiC1fI996R9i-uItluqfc_3KV7Mc/exec";
+
+// ฟังก์ชันสมัครสมาชิก
+function registerUser(fullname, nickname, username, password) {
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "register",
+      fullname: fullname,
+      nickname: nickname,
+      username: username,
+      password: password
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "success") {
+      alert("สมัครสมาชิกสำเร็จ!");
+    } else {
+      alert(data.message);
+    }
+  });
+}
+
+// ฟังก์ชันเข้าสู่ระบบ
+function loginUser(username, password) {
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "login",
+      username: username,
+      password: password
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "success") {
+      localStorage.setItem("currentUsername", data.userData.username);
+      localStorage.setItem("currentNickname", data.userData.nickname);
+      alert("เข้าสู่ระบบสำเร็จ!");
+      setUser(data.userData.nickname);
+      navigateTo('p2-modules');
+    } else {
+      alert(data.message);
+    }
+  });
+}
+
+// ฟังก์ชันบันทึกคะแนนสอบ
+function saveUnitScore(unitNumber, type, score) {
+  const username = localStorage.getItem("currentUsername");
+  if (!username) return;
+
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "updateScore",
+      username: username,
+      unitIndex: unitNumber,
+      type: type, // 'pre' หรือ 'post'
+      score: score
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log(`บันทึกคะแนน ${type} บทที่ ${unitNumber}: ${score} คะแนนเรียบร้อย`);
+  });
+}
+
+</script>
+
+
+
+
+</body></html>
